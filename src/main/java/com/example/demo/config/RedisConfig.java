@@ -75,16 +75,21 @@ public class RedisConfig {
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+        jedisConnectionFactory.setHostName("10.105.141.164");
+        jedisConnectionFactory.setPort(16379);
+        jedisConnectionFactory.setPassword("redis123");
+        //RedisConnectionFactory设置host-name，port，password都正确了，就没Connection failure occurred. Restarting subscription task 这个问题。
+        return jedisConnectionFactory;
     }
 
 
     @Bean
-    RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
+    RedisMessageListenerContainer container(JedisConnectionFactory jedisConnectionFactory,
                                             MessageListenerAdapter listenerAdapter) {
 
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
+        container.setConnectionFactory(jedisConnectionFactory);
         container.addMessageListener(listenerAdapter, new PatternTopic("chat"));
 
         return container;

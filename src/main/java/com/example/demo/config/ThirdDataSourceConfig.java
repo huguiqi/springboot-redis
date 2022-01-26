@@ -29,11 +29,11 @@ public class ThirdDataSourceConfig {
         AtomikosDataSourceBean dataSourceBean = new AtomikosDataSourceBean();
         dataSourceBean.setXaDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlXADataSource");
         Properties pts = new Properties();
-        pts.setProperty("url","jdbc:mysql://localhost:3306/otaapp");
+        pts.setProperty("url","jdbc:mysql://localhost:3366/otaapp");
 //        pts.setProperty("user","otaapp");
         pts.setProperty("user","root");
 //        pts.setProperty("password","A2c019aBCAb3B966Ca");
-        pts.setProperty("password","huguiqi");
+        pts.setProperty("password","bzy123456");
         dataSourceBean.setXaProperties(pts);
         dataSourceBean.setPoolSize(1);
         dataSourceBean.setMaxPoolSize(3);
