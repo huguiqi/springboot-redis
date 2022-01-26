@@ -1,0 +1,30 @@
+version: '2'
+services:
+  mysql:
+    build:
+      context: ./db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    restart: always
+    container_name: mysql
+    image: rc-mysql
+    ports:
+      - 13306:3306
+
+  rc-adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 18080:8080
+
+  rc-redis:
+    image: redis:6.0
+    ports:
+      - 16379:6379
+    restart: always
+    container_name: rc-redis
+    hostname: rc-redis
+    volumes:
+      - ./redis.conf:/etc/redis/redis.conf:rw
+    command:
+      /bin/bash -c "redis-server /etc/redis/redis.conf"
