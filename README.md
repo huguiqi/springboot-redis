@@ -38,7 +38,82 @@ windows:
 
 ## redis 发布订阅
 
+[发布订阅说明](https://www.runoob.com/redis/redis-pub-sub.html)
 
+
+> 如果在不引入专业的消息中间件的情况下，redis可以做发布与订阅
+
+
+设置订阅者,RedisConfig.java：
+
+        
+        @Bean
+        RedisMessageListenerContainer container(JedisConnectionFactory jedisConnectionFactory,
+                                                MessageListenerAdapter listenerAdapter) {
+    
+            RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+            container.setConnectionFactory(jedisConnectionFactory);
+            container.addMessageListener(listenerAdapter, new PatternTopic("chat"));
+    
+            return container;
+        }
+    
+        @Bean
+        MessageListenerAdapter listenerAdapter(Receiver receiver) {
+            //注册消息监听者
+            return new MessageListenerAdapter(receiver, "receiveMessage");
+        }
+    
+        @Bean
+        Receiver receiver(CountDownLatch latch) {
+            return new Receiver(latch);
+        }
+
+
+Receiver.java:
+
+
+    public class Receiver {
+    
+        private static final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
+    
+        private CountDownLatch latch;
+    
+        @Autowired
+        public Receiver(CountDownLatch latch) {
+            this.latch = latch;
+        }
+    
+        public void receiveMessage(String message) {
+            LOGGER.info("Received <" + message + ">");
+            latch.countDown();
+        }
+    }
+
+测试:
+1. 创建SUBSCRIBE频道
+
+
+    > subscribe chat 
+
+2. 发消息,redis-clients:
+    
+    
+    > PUBLISH chat 'hello'
+    1
+    > publish chat 'boby'
+    1
+
+
+收到消息：
+
+
+```
+
+2022-01-26 22:11:41.086  INFO 95795 --- [    container-2] com.example.subscribe.Receiver           : Received <hello>
+2022-01-26 22:12:09.714  INFO 95795 --- [    container-3] com.example.subscribe.Receiver           : Received <boby>
+
+```
 
 [link](http://www.jianshu.com/p/a2ab17707eff)
 
