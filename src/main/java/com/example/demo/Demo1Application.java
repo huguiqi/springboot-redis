@@ -1,19 +1,16 @@
 package com.example.demo;
 
-import com.example.demo.bean.Car;
-import com.example.demo.mapper.primary.CarMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.util.Arrays;
-import java.util.List;
 
 @SpringBootApplication
-
+@ComponentScan(basePackages = {"com.example.*"})
 public class Demo1Application {
 
     public static void main(String[] args) {

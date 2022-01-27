@@ -41,7 +41,7 @@ windows:
 [发布订阅说明](https://www.runoob.com/redis/redis-pub-sub.html)
 
 
-> 如果在不引入专业的消息中间件的情况下，redis可以做发布与订阅
+> 如果在不引入专业的消息中间件的情况下，redis也可以做发布与订阅
 
 
 设置订阅者,RedisConfig.java：
@@ -94,15 +94,17 @@ Receiver.java:
 1. 创建SUBSCRIBE频道
 
 
-    > subscribe chat 
+    ``` subscribe chat ``` 
 
 2. 发消息,redis-clients:
     
     
-    > PUBLISH chat 'hello'
-    1
-    > publish chat 'boby'
-    1
+    ``` 
+        > PUBLISH chat 'hello'
+        1
+        > publish chat 'boby'
+        1
+    ```
 
 
 收到消息：
@@ -210,11 +212,11 @@ save 60 1000
 ### 手动生成快照
 Redis提供了两个命令用于手动生成快照。
 
-### SAVE
+#### SAVE
 
 SAVE命令会使用同步的方式生成RDB快照文件，这意味着在这个过程中会阻塞所有其他客户端的请求。因此不建议在生产环境使用这个命令，除非因为某种原因需要去阻止Redis使用子进程进行后台生成快照（例如调用fork(2)出错）。
 
-### BGSAVE
+#### BGSAVE
 
 BGSAVE命令使用后台的方式保存RDB文件，调用此命令后，会立刻返回OK返回码。Redis会产生一个子进程进行处理并立刻恢复对客户端的服务。在客户端我们可以使用LASTSAVE命令查看操作是否成功。
 
@@ -343,7 +345,7 @@ Redis 2.4以上才可以自动进行日志重写，之前的版本需要手动�
 
 Jedis 是Redis 的Java客户端程序，是对redis客户端的java封装。
 
-jedis基本实现redis的所有功能，并且jedis在客户端实现redis数据分片功能，Redis本身是没有数据分布功能。
+jedis基本实现redis的所有功能，并且jedis在客户端实现redis数据分片功能，Redis本身是没有数据分片功能。
 
 jedis的使用非常简单，就不介绍了。
 
@@ -582,6 +584,18 @@ Caused by: redis.clients.jedis.exceptions.JedisConnectionException: Unexpected e
    也就是说将redisTemplate的connectionFactory换成JedisConnectionFactory就一切ok了。
    
    
-   ## RedisTemplate和StringRedisTemplate的区别
+## RedisTemplate和StringRedisTemplate的区别
    
    
+   
+   
+   
+## 使用redis的zset来实现延迟队列
+   
+> zset是set的一个升级版本，他在set的基础上增加了一个顺序属性，这一属性在添加修改元素的时候可以指定，每次指定后，zset会自动重新按新的值调整顺序。 可以对指定键的值进行排序权重的设定，它应用排名模块比较多。
+ 比如一个存储全班同学成绩的 Sorted Sets，其集合 value 可以是同学的学号，而 score 就可以是其考试得分，这样在数据插入集合的时候，就已经进行了天然的排序。另外还可以用 Sorted Sets 来做带权重的队列，比如普通消息的 score 为1，重要消息的 score 为2，然后工作线程可以选择按 score 的倒序来获取工作任务，让重要的任务优先执行。
+ zset集合可以完成有序执行、按照优先级执行的情况；
+
+
+具体请看：[四种实现延迟队列的方式](https://clockcoder.com/2022/01/25/%E5%9B%9B%E7%A7%8D%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97%E7%9A%84%E6%96%B9%E5%BC%8F/)
+
