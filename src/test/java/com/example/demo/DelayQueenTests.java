@@ -46,7 +46,7 @@ public class DelayQueenTests {
 		taskConsumer.consumer();
 
 		try {
-			TimeUnit.MILLISECONDS.sleep(30000);
+			TimeUnit.MILLISECONDS.sleep(50000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
